@@ -48,8 +48,7 @@ public class EmployeeBook {
                 }
 
         }   // Чтобы потом посчитать avgSalary по отделу нужно знать еще и количество учтенных сотрудников
-        int[] results = new int[]{total, countEmployees};
-        return results;
+        return new int[]{total, countEmployees};
     }
 
     /**
