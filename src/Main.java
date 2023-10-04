@@ -21,29 +21,31 @@ public class Main {
         EB.crateEmployee("Zivert Yulia Dmitrievna", 4, 45000);
         EB.crateEmployee("Dzyuba Anna Anatolyevna", 2, 35000);
 
-        // Изменение поля department (отдел)
+           // Изменение поля department (отдел)
+        System.out.println("Изменение поля department (отдел):");
         EB.getEmployee("Yunusov Timur Ildarovich").setDepartment(3);
         System.out.println(EB.getEmployee("Yunusov Timur Ildarovich"));
 
-        // Изменение поля salary (зарплата)
+           // Изменение поля salary (зарплата)
+        System.out.println("\nИзменение поля salary (зарплата):");
         EB.getEmployee("Abrosimova Marina Sergeevna").setSalary(45000);
         System.out.println(EB.getEmployee("Abrosimova Marina Sergeevna"));
 
-        // Сразу удалим кого-нибудь, чтобы посмотреть, как методы работают с массивом, в котором есть null-ячейки
+           // Сразу удалим кого-нибудь, чтобы посмотреть, как методы работают с массивом, в котором есть null-ячейки
         EB.removeEmployeeByID(6);
 
-        // Вывести список всех сотрудников со всеми имеющимися по ним данными
-        System.out.println();
+           // Вывести список всех сотрудников со всеми имеющимися по ним данными
+        System.out.println("\nВывести список всех сотрудников со всеми имеющимися по ним данными:");
         EB.printAllEmployeesInfo();
 
-        // Подсчет суммы затрат на зарплаты для всех сотрудников в месяц
-        System.out.println();
+           // Подсчет суммы затрат на зарплаты для всех сотрудников в месяц
+        System.out.println("\nПодсчет суммы затрат на зарплаты для всех сотрудников в месяц:");
         NumberFormat NF = NumberFormat.getCurrencyInstance();
         System.out.println("Затраты на зарплаты для всех сотрудников в месяц: " +
                 NF.format(EB.countSalariesPerMonth(-1)[0]));
 
-        // Поиск минимальной, максимальной и средней зарплаты по всей компании
-        System.out.println();
+           // Поиск минимальной, максимальной и средней зарплаты по всей компании
+        System.out.println("\nПоиск минимальной, максимальной и средней зарплаты по всей компании:");
         System.out.println("Минимальная зарплата среди всех сотрудников равна " +
                 NF.format(EB.searchExtremumSalary(-1, "min")));
 
@@ -53,19 +55,21 @@ public class Main {
         System.out.println("Средняя зарплата среди всех сотрудников равна " +
                 NF.format(EB.searchAvgSalary(-1)));
 
-        // Печать ФИО всех сотрудников
-        System.out.println();
-        EB.printFioOfAllEmployees(-1);
+           // Печать ФИО всех сотрудников
+        System.out.println("\nПечать ФИО всех сотрудников:");
+        EB.printAllEmployeesFio(-1);
 
 
 
 
-        // Индексация всех зарплат на 20%
+           // Индексация всех зарплат на 20%
+        System.out.println("\nИндексация всех зарплат на 20%:");
         EB.indexingSalaries(1.2D, -1);
+        EB.printAllEmployeesInfo();
 
         /* Поиск минимальной, максимальной и средней зарплаты по конкретному отделу
            (учтите, что зарплаты уже проиндексированы) */
-        System.out.println();
+        System.out.println("\nПоиск минимальной, максимальной и средней зарплаты по конкретному отделу");
         System.out.println("Минимальная зарплата среди сотрудников 2го отдела равна " +
                 NF.format(EB.searchExtremumSalary(2, "min")));
 
@@ -75,30 +79,43 @@ public class Main {
         System.out.println("Средняя зарплата по 4му отделу равна " +
                 NF.format(EB.searchAvgSalary(4)));
 
-        // Подсчет затрат на зарплаты сотрудников отдела
-        System.out.println();
+           // Подсчет затрат на зарплаты сотрудников отдела
+        System.out.println("\nПодсчет затрат на зарплаты сотрудников отдела:");
         System.out.println("Затраты на зарплаты для сотрудников 1го отдела в месяц: " +
                 NF.format(EB.countSalariesPerMonth(1)[0]));
 
-        // Индексация зарплат 5го отдела на 10%:
+           // Индексация зарплат 5го отдела на 10%:
         System.out.println();
         EB.indexingSalaries(1.1D, 5);
 
-        // Печать всех сотрудников 3го отдела:
+           // Печать всех сотрудников 3го отдела:
+        System.out.println("\nПечать всех сотрудников 3го отдела:");
         EB.printInfoOfEmployeesOfDepartment(3);
 
-        // Поиск сотрудников с зарплатой больше и меньше числа
-        System.out.println();
+           // Поиск сотрудников с зарплатой больше и меньше числа
+        System.out.println("\nПоиск сотрудников с зарплатой больше и меньше числа:");
         EB.searchEmployeesWithSalaryAboveNum(40000);
         System.out.println();
         EB.searchEmployeesWithSalaryLessNum(40000);
 
         /* Метод добавления нового сотрудника реализован в самом начале, так как без него не получится
-           соблюсти требование создавать новые объекты Employee олько внутри массива */
+           соблюсти требование создавать новые объекты Employee только внутри массива */
 
-        EB.removeEmployeeByID(4);
+        System.out.println("\nУдаление сотрудника:");
         EB.removeEmployeeByID(7);
-        System.out.println();
+        EB.removeEmployeeByID(4);
+        EB.removeEmployeeByID(10);
         EB.printAllEmployeesInfo();
+
+           // Изменить зарплату и отдел сотрудника
+        System.out.println("\nИзменить зарплату и отдел сотрудника:");
+        EB.toChangeEmployeeField(EB.getEmployee("Yunusov Timur Ildarovich"), "department", 5);
+        System.out.println(EB.getEmployee("Yunusov Timur Ildarovich"));
+        EB.toChangeEmployeeField(EB.getEmployee("Vysokova Klavdiya Vadimovna"), "Salary", 60000);
+        System.out.println(EB.getEmployee("Vysokova Klavdiya Vadimovna"));
+
+           // Получить Ф. И. О. всех сотрудников по отделам
+        System.out.println();
+        EB.printAllEmployeesWithDepartmentGruping();
     }
 }

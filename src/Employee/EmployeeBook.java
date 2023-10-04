@@ -1,6 +1,7 @@
 package Employee;
 
 import java.text.NumberFormat;
+import java.util.Arrays;
 
 public class EmployeeBook {
     private static Employee[] employees = new Employee[10];
@@ -14,6 +15,18 @@ public class EmployeeBook {
             }
         }
         throw new RuntimeException("Collection is full");
+    }
+
+    public void removeEmployeeByID(int id) {
+        for (int i = 0; i < employees.length; i++) {
+            if (employees[i] == null) {
+                continue;
+            }
+            if (employees[i].getID() == id) {
+                employees[i] = null;
+                return;
+            }
+        }
     }
 
     public Employee getEmployee(String fio) {
@@ -35,6 +48,68 @@ public class EmployeeBook {
         }
     }
 
+    /* Я попытался написать этот метод так, будто мы не знаем сколько у нас отделов
+       (если компания будет разрастаться, отделы будут прибавляться) */
+    public void printAllEmployeesWithDepartmentGruping() {
+
+        int[] numbersOfDepartment = new int[employees.length];
+        numbersOfDepartment[0] = employees[0].getDepartment();
+
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+            for (int j = 0; j < numbersOfDepartment.length; j++) {
+                if (employee.getDepartment() == numbersOfDepartment[j]) {
+                    break;
+                } else if (numbersOfDepartment[j] == 0) {
+                    numbersOfDepartment[j] = employee.getDepartment();
+                    break;
+                }
+            }
+        }
+        Arrays.sort(numbersOfDepartment);
+
+        for (int department : numbersOfDepartment) {
+            if (department == 0) {
+                continue;
+            }
+            System.out.println("Отдел N" + department + ": ");
+            for (Employee employee : employees) {
+                if (employee == null) {
+                    continue;
+                }
+                if (employee.getDepartment() == department) {
+                    System.out.println(employee.getFio());
+                }
+            }
+        }
+    }
+
+    public void printAllEmployeesFio(int department) {
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+            if (department == -1 || department == employee.getDepartment()) {
+                System.out.println(employee.getFio());
+            }
+        }
+    }
+
+    public void printInfoOfEmployeesOfDepartment(int department) {
+        System.out.println("Отдел N" + department);
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+            if (department == employee.getDepartment()) {
+                System.out.printf("ID%d: %s, salary: %s\n",
+                        employee.getID(), employee.getFio(), NF.format(employee.getSalary()));
+            }
+        }
+    }
+
     public int[] countSalariesPerMonth(int department) {
         int total = 0;
         int countEmployees = 0;
@@ -48,8 +123,7 @@ public class EmployeeBook {
                 }
 
         }   // Чтобы потом посчитать avgSalary по отделу нужно знать еще и количество учтенных сотрудников
-        int[] results = new int[]{total, countEmployees};
-        return results;
+        return new int[]{total, countEmployees};
     }
 
     /**
@@ -61,7 +135,7 @@ public class EmployeeBook {
 
     /* Предупреждая замечание, что каждый метод должен заниматься только одним конкретным делом, скажу, что этот метод
         так и делает: выводит необходимый экстремум по зарплате в заданной выборке объектов Employee */
-    public double searchExtremumSalary(int department, String extremum) {
+    public double searchExtremumSalary(int department, String extremum) { // Для 2го параметра Enum конечно был бы лучше
 
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
@@ -90,24 +164,13 @@ public class EmployeeBook {
         }
     }
 
-
     public int searchAvgSalary(int department) {
         int[] input = countSalariesPerMonth(department);
         return input[0] / input[1];
     }
 
-    public void printFioOfAllEmployees(int department) {
-        for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (department == -1 || department == employee.getDepartment()) {
-                System.out.println(employee.getFio());
-            }
-        }
-    }
-
     // Ожидается коэффициент индексации, а не процент повышения
+
     public void indexingSalaries(double index, int department) {
         for (Employee employee : employees) {
             if (employee == null) {
@@ -119,20 +182,6 @@ public class EmployeeBook {
         }
     }
 
-
-    public void printInfoOfEmployeesOfDepartment(int department) {
-
-        System.out.println("Отдел N" + department);
-        for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (department == employee.getDepartment()) {
-                System.out.printf("ID%d: %s, salary: %s\n",
-                        employee.getID(), employee.getFio(), NF.format(employee.getSalary()));
-            }
-        }
-    }
 
     public void searchEmployeesWithSalaryAboveNum(int num) {
         System.out.println("Сотрудники с зарплатой больше " + NF.format(num) + ":");
@@ -159,18 +208,16 @@ public class EmployeeBook {
             }
         }
     }
-
     /* Уникальным идентификатором является не поле fio, а поле ID, (чтобы два полных тески могли устроиться и
        это бы не поломало программу; ID же всегда уникален) будем удалять по ID */
-    public void removeEmployeeByID(int id) {
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] == null) {
-                continue;
-            }
-            if (employees[i].getID() == id) {
-                employees[i] = null;
-                return;
-            }
+
+    public void toChangeEmployeeField(Employee employee, String field, double fieldNewValue) {
+        if (field.equalsIgnoreCase("salary")) {
+            employee.setSalary(fieldNewValue);
+        } else if (field.equalsIgnoreCase("department")) {
+            employee.setDepartment((int) fieldNewValue);
+        } else {
+            System.out.println("This field can not be changed!");
         }
     }
 }
