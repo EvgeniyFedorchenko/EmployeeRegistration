@@ -52,6 +52,8 @@ public class EmployeeBook {
        (если компания будет разрастаться, отделы будут прибавляться) */
     public void printAllEmployeesWithDepartmentGruping() {
 
+        /* Массив для номеров отделов (номера уникальны), в которых есть хотя бы отдин сотрудник. Если сотрудник
+           устраивается в новый отдел, этот метод сразу будет иметь ввиду наличие этого нового отдела */
         int[] numbersOfDepartment = new int[employees.length];
         numbersOfDepartment[0] = employees[0].getDepartment();
 
@@ -86,14 +88,12 @@ public class EmployeeBook {
         }
     }
 
-    public void printAllEmployeesFio(int department) {
+    public void printAllEmployeesFio() {
         for (Employee employee : employees) {
             if (employee == null) {
                 continue;
             }
-            if (department == -1 || department == employee.getDepartment()) {
-                System.out.println(employee.getFio());
-            }
+            System.out.println(employee.getFio());
         }
     }
 
@@ -117,25 +117,25 @@ public class EmployeeBook {
             if (employee == null) {
                 continue;
             }
-                if (department == -1 || department == employee.getDepartment()) {
-                    total += employee.getSalary();
-                    countEmployees++;
-                }
+            if (department == -1 || department == employee.getDepartment()) {
+                total += employee.getSalary();
+                countEmployees++;
+            }
 
         }   // Чтобы потом посчитать avgSalary по отделу нужно знать еще и количество учтенных сотрудников
         return new int[]{total, countEmployees};
     }
 
+
     /**
      * Тут объединены методы получения min/maxSalary по всем сотрудникам и получения её же по конкретному
      * отделу: Для вывода ЗП ожидается:
      * - В первом параметре: номер отдела (или -1 для поиска по всей компании)
-     * - Во втором парметре: тип экстремума в виде строки "min" и "max" соответственно
+     * - Во втором парметре: тип экстремума в виде строки "min" и "max" соответственно (хотя Enum конечно был бы лучше)
      **/
-
     /* Предупреждая замечание, что каждый метод должен заниматься только одним конкретным делом, скажу, что этот метод
         так и делает: выводит необходимый экстремум по зарплате в заданной выборке объектов Employee */
-    public double searchExtremumSalary(int department, String extremum) { // Для 2го параметра Enum конечно был бы лучше
+    public double searchExtremumSalary(int department, String extremum) { //
 
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
@@ -171,7 +171,7 @@ public class EmployeeBook {
 
     // Ожидается коэффициент индексации, а не процент повышения
 
-    public void indexingSalaries(double index, int department) {
+    public void indexingSalaries(double index, int department) { // Во втором аргументе -1 для всех отделов сразу
         for (Employee employee : employees) {
             if (employee == null) {
                 continue;
@@ -208,9 +208,9 @@ public class EmployeeBook {
             }
         }
     }
+
     /* Уникальным идентификатором является не поле fio, а поле ID, (чтобы два полных тески могли устроиться и
        это бы не поломало программу; ID же всегда уникален) будем удалять по ID */
-
     public void toChangeEmployeeField(Employee employee, String field, double fieldNewValue) {
         if (field.equalsIgnoreCase("salary")) {
             employee.setSalary(fieldNewValue);

@@ -21,6 +21,7 @@ public class Main {
         EB.crateEmployee("Zivert Yulia Dmitrievna", 4, 45000);
         EB.crateEmployee("Dzyuba Anna Anatolyevna", 2, 35000);
 
+
            // Изменение поля department (отдел)
         System.out.println("Изменение поля department (отдел):");
         EB.getEmployee("Yunusov Timur Ildarovich").setDepartment(3);
@@ -57,7 +58,7 @@ public class Main {
 
            // Печать ФИО всех сотрудников
         System.out.println("\nПечать ФИО всех сотрудников:");
-        EB.printAllEmployeesFio(-1);
+        EB.printAllEmployeesFio();
 
 
 
@@ -98,7 +99,8 @@ public class Main {
         System.out.println();
         EB.searchEmployeesWithSalaryLessNum(40000);
 
-        /* Метод добавления нового сотрудника реализован в самом начале, так как без него не получится
+
+        /* Метод добавления нового сотрудника вызван в самом начале, так как без него не получится
            соблюсти требование создавать новые объекты Employee только внутри массива */
 
         System.out.println("\nУдаление сотрудника:");
