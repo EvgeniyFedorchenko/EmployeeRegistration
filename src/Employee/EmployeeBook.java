@@ -31,8 +31,12 @@ public class EmployeeBook {
     public void toChangeEmployeeField(int id, String field, double fieldNewValue) {
         Employee employeeForChange = null;
         for (Employee employee : employees) {
-            if (employees != null && employee.getId() == id) {
+            if (employees == null) {
+                continue;
+            }
+            if (employee.getId() == id) {
                 employeeForChange = employee;
+                break;
             }
         }
         if (field.equalsIgnoreCase("salary")) {
