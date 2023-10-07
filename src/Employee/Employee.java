@@ -7,14 +7,14 @@ public class Employee {
     private String fio;
     private int department;
     private double salary;
-    private final int ID;
+    private final int id;
     private static int counter = 1;
 
     Employee(String fio, int department, int salary) {
         this.fio = fio;
         this.department = department;
         this.salary = salary;
-        this.ID = counter++;
+        this.id = counter++;
     }
 
     public String getFio() {
@@ -29,44 +29,44 @@ public class Employee {
         return salary;
     }
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return id;
     }
 
     public void setDepartment(int department) {
-        if (this.department != department) {
+        if (this.department > 0) {
             this.department = department;
         } else {
-            throw new IllegalArgumentException("This department has already been installed!");
+            throw new IllegalArgumentException("This number of department is uncorrected!");
         }
     }
 
     public void setSalary(double salary) {
-        if (this.salary != salary) {
+        if (this.salary > 0) {
             this.salary = salary;
         } else {
-            throw new IllegalArgumentException("This salary has already been installed!");
+            throw new IllegalArgumentException("Can not set the salary below zero!");
         }
     }
 
     @Override
     public String toString() {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-        return "ID" + ID + ": " + fio + ", " + department + " dep., salary: " + numberFormat.format(salary);
+        return "id" + id + ": " + fio + ", " + department + " dep., salary: " + numberFormat.format(salary);
     }
 
-    /* Если ID - это уникальный идентификатор каждого объекта,
+    /* Если id - это уникальный идентификатор каждого объекта,
        можно прописать equals и hashCode, освновываясь только на одном этом поле */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return ID == employee.ID;
+        return id == employee.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ID);
+        return Objects.hash(id);
     }
 }

@@ -4,8 +4,8 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class EmployeeBook {
-    private static Employee[] employees = new Employee[10];
-    static NumberFormat NF = NumberFormat.getCurrencyInstance();
+    private Employee[] employees = new Employee[10];
+    private static NumberFormat nf = NumberFormat.getCurrencyInstance();
 
     public void crateEmployee(String fio, int department, int salary) {
         for (int i = 0; i < employees.length; i++) {
@@ -17,21 +17,36 @@ public class EmployeeBook {
         throw new RuntimeException("Collection is full");
     }
 
-    public void removeEmployeeByID(int id) {
+    /* Уникальным идентификатором является не поле fio, а поле id, (чтобы два полных тески могли устроиться и
+       это бы не поломало программу; ID же всегда уникален) будем удалять по ID */
+    public void removeEmployeeById(int id) {
         for (int i = 0; i < employees.length; i++) {
-            if (employees[i] == null) {
-                continue;
-            }
-            if (employees[i].getID() == id) {
+            if (employees[i] != null && employees[i].getId() == id) {
                 employees[i] = null;
                 return;
             }
         }
     }
 
+    public void toChangeEmployeeField(int id, String field, double fieldNewValue) {
+        Employee employeeForChange = null;
+        for (Employee employee : employees) {
+            if (employees != null && employee.getId() == id) {
+                employeeForChange = employee;
+            }
+        }
+        if (field.equalsIgnoreCase("salary")) {
+            employeeForChange.setSalary(fieldNewValue);
+        } else if (field.equalsIgnoreCase("department")) {
+            employeeForChange.setDepartment((int) fieldNewValue);
+        } else {
+            System.out.println("This field can not be changed!");
+        }
+    }
+
     public Employee getEmployee(String fio) {
         for (Employee employee : employees) {
-            if (fio.equals(employee.getFio())) {
+            if (employee != null && fio.equals(employee.getFio())) {
                 return employee;
             }
         }
@@ -55,7 +70,6 @@ public class EmployeeBook {
         /* Массив для номеров отделов (номера уникальны), в которых есть хотя бы отдин сотрудник. Если сотрудник
            устраивается в новый отдел, этот метод сразу будет иметь ввиду наличие этого нового отдела */
         int[] numbersOfDepartment = new int[employees.length];
-        numbersOfDepartment[0] = employees[0].getDepartment();
 
         for (Employee employee : employees) {
             if (employee == null) {
@@ -78,10 +92,7 @@ public class EmployeeBook {
             }
             System.out.println("Отдел N" + department + ": ");
             for (Employee employee : employees) {
-                if (employee == null) {
-                    continue;
-                }
-                if (employee.getDepartment() == department) {
+                if (employee != null && employee.getDepartment() == department) {
                     System.out.println(employee.getFio());
                 }
             }
@@ -90,34 +101,28 @@ public class EmployeeBook {
 
     public void printAllEmployeesFio() {
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
+            if (employee != null) {
+                System.out.println(employee.getFio());
             }
-            System.out.println(employee.getFio());
         }
     }
 
     public void printInfoOfEmployeesOfDepartment(int department) {
         System.out.println("Отдел N" + department);
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (department == employee.getDepartment()) {
+            if (employee != null && department == employee.getDepartment()) {
                 System.out.printf("ID%d: %s, salary: %s\n",
-                        employee.getID(), employee.getFio(), NF.format(employee.getSalary()));
+                        employee.getId(), employee.getFio(), nf.format(employee.getSalary()));
             }
         }
     }
 
-    public int[] countSalariesPerMonth(int department) {
+    public int[] countSalariesPerMonth(int department) { // Ожидается номер отдела или -1 для всей компании
         int total = 0;
         int countEmployees = 0;
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (department == -1 || department == employee.getDepartment()) {
+
+            if (employee != null && (department == -1 || department == employee.getDepartment())) {
                 total += employee.getSalary();
                 countEmployees++;
             }
@@ -135,7 +140,7 @@ public class EmployeeBook {
      **/
     /* Предупреждая замечание, что каждый метод должен заниматься только одним конкретным делом, скажу, что этот метод
         так и делает: выводит необходимый экстремум по зарплате в заданной выборке объектов Employee */
-    public double searchExtremumSalary(int department, String extremum) { //
+    public double searchExtremumSalary(int department, String extremum) {
 
         double min = Double.MAX_VALUE;
         double max = Double.MIN_VALUE;
@@ -151,8 +156,9 @@ public class EmployeeBook {
             }
             if (employee.getSalary() > max && department == -1) {
                 max = employee.getSalary();
-            } else if (employee.getSalary() > max && department == employee.getDepartment())
+            } else if (employee.getSalary() > max && department == employee.getDepartment()) {
                 max = employee.getSalary();
+            }
         }
 
         if (extremum.equals("min") && min != Double.MAX_VALUE) {
@@ -164,7 +170,7 @@ public class EmployeeBook {
         }
     }
 
-    public int searchAvgSalary(int department) {
+    public int searchAvgSalary(int department) {  // Ожидается номер отдела или -1 для всей компании
         int[] input = countSalariesPerMonth(department);
         return input[0] / input[1];
     }
@@ -173,10 +179,7 @@ public class EmployeeBook {
 
     public void indexingSalaries(double index, int department) { // Во втором аргументе -1 для всех отделов сразу
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (department == -1 || department == employee.getDepartment()) {
+            if (employee != null && (department == -1 || department == employee.getDepartment())) {
                 employee.setSalary(employee.getSalary() * index);
             }
         }
@@ -184,40 +187,23 @@ public class EmployeeBook {
 
 
     public void searchEmployeesWithSalaryAboveNum(int num) {
-        System.out.println("Сотрудники с зарплатой больше " + NF.format(num) + ":");
+        System.out.println("Сотрудники с зарплатой больше " + nf.format(num) + ":");
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (employee.getSalary() > num) {
+            if (employee != null && employee.getSalary() > num) {
                 System.out.printf("ID%d: %s, зарплата: %s\n",
-                        employee.getID(), employee.getFio(), NF.format(employee.getSalary()));
+                        employee.getId(), employee.getFio(), nf.format(employee.getSalary()));
             }
         }
     }
 
     public void searchEmployeesWithSalaryLessNum(int num) {
-        System.out.println("Сотрудники с зарплатой меньше или равной " + NF.format(num) + ":");
+        System.out.println("Сотрудники с зарплатой меньше или равной " + nf.format(num) + ":");
         for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-            if (employee.getSalary() <= num) {
-                System.out.printf("ID%d: %s, зарплата: %s\n",
-                        employee.getID(), employee.getFio(), NF.format(employee.getSalary()));
-            }
-        }
-    }
 
-    /* Уникальным идентификатором является не поле fio, а поле ID, (чтобы два полных тески могли устроиться и
-       это бы не поломало программу; ID же всегда уникален) будем удалять по ID */
-    public void toChangeEmployeeField(Employee employee, String field, double fieldNewValue) {
-        if (field.equalsIgnoreCase("salary")) {
-            employee.setSalary(fieldNewValue);
-        } else if (field.equalsIgnoreCase("department")) {
-            employee.setDepartment((int) fieldNewValue);
-        } else {
-            System.out.println("This field can not be changed!");
+            if (employee != null && employee.getSalary() <= num) {
+                System.out.printf("ID%d: %s, зарплата: %s\n",
+                        employee.getId(), employee.getFio(), nf.format(employee.getSalary()));
+            }
         }
     }
 }
