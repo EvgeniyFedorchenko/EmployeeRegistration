@@ -21,8 +21,11 @@ public class Main {
         employeeBook.crateEmployee("Zivert Yulia Dmitrievna", 4, 45000);
         employeeBook.crateEmployee("Dzyuba Anna Anatolyevna", 2, 35000);
 
+        // Демонстрация группировки сотрудников по отделам
+        employeeBook.printAllEmployeesWithDepartmentGruping();
 
            // Изменение поля department (отдел)
+        System.out.println();
         System.out.println("Изменение поля department (отдел):");
         employeeBook.getEmployee("Yunusov Timur Ildarovich").setDepartment(3);
         System.out.println(employeeBook.getEmployee("Yunusov Timur Ildarovich"));
@@ -41,20 +44,21 @@ public class Main {
 
            // Подсчет суммы затрат на зарплаты для всех сотрудников в месяц
         System.out.println("\nПодсчет суммы затрат на зарплаты для всех сотрудников в месяц:");
-        NumberFormat NF = NumberFormat.getCurrencyInstance();
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        DataOfSalaryFund dataOfSalaryFund = employeeBook.countSalariesPerMonth(-1);
         System.out.println("Затраты на зарплаты для всех сотрудников в месяц: " +
-                NF.format(employeeBook.countSalariesPerMonth(-1)[0]));
+                nf.format(dataOfSalaryFund.getTotalSalary()));
 
            // Поиск минимальной, максимальной и средней зарплаты по всей компании
         System.out.println("\nПоиск минимальной, максимальной и средней зарплаты по всей компании:");
         System.out.println("Минимальная зарплата среди всех сотрудников равна " +
-                NF.format(employeeBook.searchExtremumSalary(-1, "min")));
+                nf.format(employeeBook.searchExtremumSalary(-1, "min")));
 
         System.out.println("Максимальная зарплата среди всех сотрудников равна " +
-                NF.format(employeeBook.searchExtremumSalary(-1, "max")));
+                nf.format(employeeBook.searchExtremumSalary(-1, "max")));
 
         System.out.println("Средняя зарплата среди всех сотрудников равна " +
-                NF.format(employeeBook.searchAvgSalary(-1)));
+                nf.format(employeeBook.searchAvgSalary(-1)));
 
            // Печать ФИО всех сотрудников
         System.out.println("\nПечать ФИО всех сотрудников:");
@@ -72,18 +76,19 @@ public class Main {
            (учтите, что зарплаты уже проиндексированы) */
         System.out.println("\nПоиск минимальной, максимальной и средней зарплаты по конкретному отделу");
         System.out.println("Минимальная зарплата среди сотрудников 2го отдела равна " +
-                NF.format(employeeBook.searchExtremumSalary(2, "min")));
+                nf.format(employeeBook.searchExtremumSalary(2, "min")));
 
         System.out.println("Максимальная зарплата среди сотрудников 3го отдела равна " +
-                NF.format(employeeBook.searchExtremumSalary(3, "max")));
+                nf.format(employeeBook.searchExtremumSalary(3, "max")));
 
         System.out.println("Средняя зарплата по 4му отделу равна " +
-                NF.format(employeeBook.searchAvgSalary(4)));
+                nf.format(employeeBook.searchAvgSalary(4)));
 
            // Подсчет затрат на зарплаты сотрудников отдела
         System.out.println("\nПодсчет затрат на зарплаты сотрудников отдела:");
+        dataOfSalaryFund = employeeBook.countSalariesPerMonth(1);
         System.out.println("Затраты на зарплаты для сотрудников 1го отдела в месяц: " +
-                NF.format(employeeBook.countSalariesPerMonth(1)[0]));
+                nf.format(dataOfSalaryFund.getTotalSalary()));
 
            // Индексация зарплат 5го отдела на 10%:
         System.out.println();

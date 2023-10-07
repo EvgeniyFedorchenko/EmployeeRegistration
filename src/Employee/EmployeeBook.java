@@ -71,9 +71,23 @@ public class EmployeeBook {
        (если компания будет разрастаться, отделы будут прибавляться) */
     public void printAllEmployeesWithDepartmentGruping() {
 
-        /* Массив для номеров отделов (номера уникальны), в которых есть хотя бы отдин сотрудник. Если сотрудник
-           устраивается в новый отдел, этот метод сразу будет иметь ввиду наличие этого нового отдела */
-        int[] numbersOfDepartment = new int[employees.length];
+        /* Ищем количество уникальных отделов */
+        int countOfUniqueDepartments = 0;
+        for (int i = 1; i < employees.length; i++) {
+            boolean isDepartmentUnique = true;
+            for (int j = 0; j < i; j++) {
+                if (employees[i] != null && employees[j] != null &&
+                        employees[i].getDepartment() == employees[j].getDepartment()) {
+                    isDepartmentUnique = false;
+                    break;
+                }
+            }
+            if (isDepartmentUnique) {
+                countOfUniqueDepartments++;
+            }
+        }
+        // Собираем в массив номера этих отделов
+        int[] numbersOfDepartment = new int[countOfUniqueDepartments];
 
         for (Employee employee : employees) {
             if (employee == null) {
@@ -89,7 +103,7 @@ public class EmployeeBook {
             }
         }
         Arrays.sort(numbersOfDepartment);
-
+        // Печатаем всех сотрудников с сортировкой по отделам
         for (int department : numbersOfDepartment) {
             if (department == 0) {
                 continue;
@@ -121,7 +135,7 @@ public class EmployeeBook {
         }
     }
 
-    public int[] countSalariesPerMonth(int department) { // Ожидается номер отдела или -1 для всей компании
+    public DataOfSalaryFund countSalariesPerMonth(int department) { // Ожидается номер отдела или -1 для всей компании
         int total = 0;
         int countEmployees = 0;
         for (Employee employee : employees) {
@@ -130,9 +144,8 @@ public class EmployeeBook {
                 total += employee.getSalary();
                 countEmployees++;
             }
-
-        }   // Чтобы потом посчитать avgSalary по отделу нужно знать еще и количество учтенных сотрудников
-        return new int[]{total, countEmployees};
+        }
+        return new DataOfSalaryFund(total, countEmployees);
     }
 
 
@@ -175,12 +188,11 @@ public class EmployeeBook {
     }
 
     public int searchAvgSalary(int department) {  // Ожидается номер отдела или -1 для всей компании
-        int[] input = countSalariesPerMonth(department);
-        return input[0] / input[1];
+        DataOfSalaryFund data = countSalariesPerMonth(department);
+        return data.getTotalSalary() / data.getAmountEmployees();
     }
 
     // Ожидается коэффициент индексации, а не процент повышения
-
     public void indexingSalaries(double index, int department) { // Во втором аргументе -1 для всех отделов сразу
         for (Employee employee : employees) {
             if (employee != null && (department == -1 || department == employee.getDepartment())) {
@@ -188,7 +200,6 @@ public class EmployeeBook {
             }
         }
     }
-
 
     public void searchEmployeesWithSalaryAboveNum(int num) {
         System.out.println("Сотрудники с зарплатой больше " + nf.format(num) + ":");
