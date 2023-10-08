@@ -1,8 +1,8 @@
 package Employee;
 
 public class DataOfSalaryFund {
-    static int totalSalary;
-    int amountEmployees;
+    private final int totalSalary;
+    private final int amountEmployees;
 
     public DataOfSalaryFund(int totalSalary, int amountEmployees) {
         this.totalSalary = totalSalary;

@@ -31,10 +31,7 @@ public class EmployeeBook {
     public void toChangeEmployeeField(int id, String field, double fieldNewValue) {
         Employee employeeForChange = null;
         for (Employee employee : employees) {
-            if (employees == null) {
-                continue;
-            }
-            if (employee.getId() == id) {
+            if (employees != null && employee.getId() == id) {
                 employeeForChange = employee;
                 break;
             }
@@ -71,23 +68,8 @@ public class EmployeeBook {
        (если компания будет разрастаться, отделы будут прибавляться) */
     public void printAllEmployeesWithDepartmentGruping() {
 
-        /* Ищем количество уникальных отделов */
-        int countOfUniqueDepartments = 0;
-        for (int i = 1; i < employees.length; i++) {
-            boolean isDepartmentUnique = true;
-            for (int j = 0; j < i; j++) {
-                if (employees[i] != null && employees[j] != null &&
-                        employees[i].getDepartment() == employees[j].getDepartment()) {
-                    isDepartmentUnique = false;
-                    break;
-                }
-            }
-            if (isDepartmentUnique) {
-                countOfUniqueDepartments++;
-            }
-        }
         // Собираем в массив номера этих отделов
-        int[] numbersOfDepartment = new int[countOfUniqueDepartments];
+        int[] numbersOfDepartment = new int[employees.length];
 
         for (Employee employee : employees) {
             if (employee == null) {
@@ -102,12 +84,21 @@ public class EmployeeBook {
                 }
             }
         }
-        Arrays.sort(numbersOfDepartment);
-        // Печатаем всех сотрудников с сортировкой по отделам
-        for (int department : numbersOfDepartment) {
-            if (department == 0) {
-                continue;
+        // Считаем, сколько там ненулевых отделов
+        int countNoZeroNumbers = 0;
+        for (int number : numbersOfDepartment) {
+            if (number != 0) {
+                countNoZeroNumbers++;
             }
+        }
+        // Создаем под ненулевые элменты новый массив и складываем их туда
+        int[] numberOfDepartmentsWithoutZeros = new int[countNoZeroNumbers];
+        System.arraycopy(numbersOfDepartment, 0, numberOfDepartmentsWithoutZeros,0,
+                countNoZeroNumbers);
+        Arrays.sort(numberOfDepartmentsWithoutZeros);
+
+        // Печатаем всех сотрудников с сортировкой по отделам
+        for (int department : numberOfDepartmentsWithoutZeros) {
             System.out.println("Отдел N" + department + ": ");
             for (Employee employee : employees) {
                 if (employee != null && employee.getDepartment() == department) {
