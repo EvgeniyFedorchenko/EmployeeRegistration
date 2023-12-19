@@ -55,18 +55,16 @@ public class Employee {
         return "id" + id + ": " + fio + ", " + department + " dep., salary: " + numberFormat.format(salary);
     }
 
-    /* Если id - это уникальный идентификатор каждого объекта,
-       можно прописать equals и hashCode, освновываясь только на одном этом поле */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return id == employee.id;
+        return department == employee.department && Double.compare(employee.salary, salary) == 0 && id == employee.id && fio.equals(employee.fio);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(fio, department, salary, id);
     }
 }

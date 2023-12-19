@@ -1,11 +1,7 @@
 package Employee;
 
-import java.text.NumberFormat;
-import java.util.Arrays;
-
 public class EmployeeBook {
-    private Employee[] employees = new Employee[10];
-    private static NumberFormat nf = NumberFormat.getCurrencyInstance();
+    private static Employee[] employees = new Employee[10];
 
     public void crateEmployee(String fio, int department, int salary) {
         for (int i = 0; i < employees.length; i++) {
@@ -19,15 +15,17 @@ public class EmployeeBook {
 
     /* Уникальным идентификатором является не поле fio, а поле id, (чтобы два полных тески могли устроиться и
        это бы не поломало программу; ID же всегда уникален) будем удалять по ID */
+    @Override
     public void removeEmployeeById(int id) {
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null && employees[i].getId() == id) {
-                employees[i] = null;
+        for (int i = 0; i < employees.size(); i++) {
+            if (employees.get(i) != null && employees.get(i).getId() == id) {
+                employees.set(i, null);
                 return;
             }
         }
     }
 
+    @Override
     public void toChangeEmployeeField(int id, String field, double fieldNewValue) {
         Employee employeeForChange = null;
         for (Employee employee : employees) {
@@ -45,6 +43,7 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public Employee getEmployee(String fio) {
         for (Employee employee : employees) {
             if (employee != null && fio.equals(employee.getFio())) {
@@ -54,6 +53,7 @@ public class EmployeeBook {
         throw new RuntimeException("This employee isn't found!");
     }
 
+    @Override
     public void printAllEmployeesInfo() {
         for (Employee employee : employees) {
             if (employee == null) {
@@ -66,10 +66,11 @@ public class EmployeeBook {
 
     /* Я попытался написать этот метод так, будто мы не знаем сколько у нас отделов
        (если компания будет разрастаться, отделы будут прибавляться) */
+    @Override
     public void printAllEmployeesWithDepartmentGruping() {
 
         // Собираем в массив номера этих отделов
-        int[] numbersOfDepartment = new int[employees.length];
+        int[] numbersOfDepartment = new int[employees.size()];
 
         for (Employee employee : employees) {
             if (employee == null) {
@@ -108,6 +109,7 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public void printAllEmployeesFio() {
         for (Employee employee : employees) {
             if (employee != null) {
@@ -116,6 +118,7 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public void printInfoOfEmployeesOfDepartment(int department) {
         System.out.println("Отдел N" + department);
         for (Employee employee : employees) {
@@ -126,6 +129,7 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public DataOfSalaryFund countSalariesPerMonth(int department) { // Ожидается номер отдела или -1 для всей компании
         int total = 0;
         int countEmployees = 0;
@@ -148,6 +152,7 @@ public class EmployeeBook {
      **/
     /* Предупреждая замечание, что каждый метод должен заниматься только одним конкретным делом, скажу, что этот метод
         так и делает: выводит необходимый экстремум по зарплате в заданной выборке объектов Employee */
+    @Override
     public double searchExtremumSalary(int department, String extremum) {
 
         double min = Double.MAX_VALUE;
@@ -178,12 +183,14 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public int searchAvgSalary(int department) {  // Ожидается номер отдела или -1 для всей компании
         DataOfSalaryFund data = countSalariesPerMonth(department);
         return data.getTotalSalary() / data.getAmountEmployees();
     }
 
     // Ожидается коэффициент индексации, а не процент повышения
+    @Override
     public void indexingSalaries(double index, int department) { // Во втором аргументе -1 для всех отделов сразу
         for (Employee employee : employees) {
             if (employee != null && (department == -1 || department == employee.getDepartment())) {
@@ -192,6 +199,7 @@ public class EmployeeBook {
         }
     }
 
+    @Override
     public void searchEmployeesWithSalaryAboveNum(int num) {
         System.out.println("Сотрудники с зарплатой больше " + nf.format(num) + ":");
         for (Employee employee : employees) {
@@ -202,6 +210,9 @@ public class EmployeeBook {
         }
     }
 
+
+
+    @Override
     public void searchEmployeesWithSalaryLessNum(int num) {
         System.out.println("Сотрудники с зарплатой меньше или равной " + nf.format(num) + ":");
         for (Employee employee : employees) {
