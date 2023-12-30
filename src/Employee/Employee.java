@@ -1,16 +1,20 @@
 package Employee;
 
+import java.text.NumberFormat;
+import java.util.Objects;
+
 public class Employee {
     private String fio;
     private int department;
-    private int salary;
-    int id;
+    private double salary;
+    private final int id;
+    private static int counter = 1;
 
     Employee(String fio, int department, int salary) {
         this.fio = fio;
         this.department = department;
         this.salary = salary;
-        this.id = id++;
+        this.id = counter++;
     }
 
     public String getFio() {
@@ -21,7 +25,7 @@ public class Employee {
         return department;
     }
 
-    public int getSalary() {
+    public double getSalary() {
         return salary;
     }
 
@@ -30,18 +34,37 @@ public class Employee {
     }
 
     public void setDepartment(int department) {
-        if (this.department != department) {
+        if (this.department > 0) {
             this.department = department;
         } else {
-            throw new IllegalArgumentException("This department has already been installed!");
+            throw new IllegalArgumentException("This number of department is uncorrected!");
         }
     }
 
-    public void setSalary(int salary) {
-        if (this.salary != salary) {
+    public void setSalary(double salary) {
+        if (this.salary > 0) {
             this.salary = salary;
         } else {
-            throw new IllegalArgumentException("This salary has already been installed!");
+            throw new IllegalArgumentException("Can not set the salary below zero!");
         }
+    }
+
+    @Override
+    public String toString() {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
+        return "id" + id + ": " + fio + ", " + department + " dep., salary: " + numberFormat.format(salary);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return department == employee.department && Double.compare(employee.salary, salary) == 0 && id == employee.id && fio.equals(employee.fio);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fio, department, salary, id);
     }
 }
